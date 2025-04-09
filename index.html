@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habiba Core</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <h1>happy birthday my love</h1>
+    <p> may your heart always be as full as your laughter. You deserve a world of joy, today and always.Allahummabarik!!</p>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            overflow: hidden;
+        }
+       h1 {
+        font-family: cursive;
+        color: #fff;
+       font-size: 25px;
+       animation: fadeInDown 2s ease-in-out;
+       margin-bottom: 20px;
+       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+            
+        
+        .gallery-container {
+            position: relative;
+            width: 450px;
+            height: 500px;
+            perspective: 1400px;
+            touch-action: pan-y;
+        }
+        .gallery {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease-in-out;
+        }
+        .gallery img {
+            width: 320px;
+            height: 400px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            transform-origin: center;
+            transition: transform 0.5s, opacity 0.5s;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+            opacity: 0.6;
+        }
+        .gallery img.active {
+            transform: scale(1.5);
+            opacity: 1;
+            z-index: 10;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background-color: #ff4d79;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background-color 0.5s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #e6005c;
+            transform: scale(1.1);
+        }
+        @media(max-width: 500px) {
+            .gallery-container {
+                width: 300px;
+                height: 350px;
+            }
+            .gallery img {
+                width: 220px;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <div class="gallery">
+            <img src="habi01.jpeg.jpg" class="active" style="transform: rotateY(0deg) translateZ(350px);" alt="image 1">
+            <img src="habi02.jpeg.jpg" style="transform: rotateY(60deg) translateZ(350px);" alt="image 2">
+            <img src="habi03.jpeg.jpg" style="transform: rotateY(120deg) translateZ(350px);" alt="image 3">
+            <img src="habi04.jpeg.jpg" style="transform: rotateY(180deg) translateZ(350px);" alt="image 4">
+            <img src="habi05.jpeg.jpg" style="transform: rotateY(240deg) translateZ(350px);" alt="image 5">
+            <img src="habi06.jpeg.jpg" style="transform: rotateY(300deg) translateZ(350px);" alt="image 6">
+        </div>
+    </div>
+    <div class="controls">
+        <button onclick="rotateGallery(-1)">
+            <i class="fa-solid fa-arrow-left-long"></i> Previous
+        </button>
+        <button onclick="rotateGallery(1)">
+            Next <i class="fa-solid fa-arrow-right-long"></i>
+        </button>
+    </div>
+
+    <script>
+        let angle = 0;
+        let currentIndex = 0;
+        const gallery = document.querySelector(".gallery");
+        const images = document.querySelectorAll(".gallery img");
+
+        function rotateGallery(direction) {
+            angle += direction * 60;
+            gallery.style.transform = `rotateY(${angle}deg)`;
+
+            images.forEach(img => img.classList.remove("active"));
+            currentIndex = (currentIndex + direction + images.length) % images.length;
+            images[currentIndex].classList.add("active");
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "ArrowRight") {
+                rotateGallery(1);
+            } else if (event.key === "ArrowLeft") {
+                rotateGallery(-1);
+            }
+        });
+
+        let startX = 0;
+        document.querySelector(".gallery-container").addEventListener("touchstart", (event) => {
+            startX = event.touches[0].clientX;
+        });
+
+        document.querySelector(".gallery-container").addEventListener("touchend", (event) => {
+            let endX = event.changedTouches[0].clientX;
+            let diff = startX - endX;
+            if (diff > 50) {
+                rotateGallery(1);
+            } else if (diff < -50) {
+                rotateGallery(-1);
+            }
+        });
+
+        function preloadImages() {
+            images.forEach((img) => {
+                const src = img.getAttribute("src");
+                new Image().src = src;
+            });
+        }
+        preloadImages();
+    </script>
+</body>
+</html>
